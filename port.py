@@ -10,7 +10,6 @@ from pymongo import MongoClient
 
 
 client = MongoClient()
-# print(client.list_database_names())
 portfolio_ports_db = client["portfolio_ports"]
 portfolios_col = portfolio_ports_db["portfolios"]
 
@@ -24,11 +23,11 @@ def create_portfolio():
     stocks = float(request.args.get("stocks"))
     bonds = float(request.args.get("bonds"))
     cash = float(request.args.get("cash"))
-
+    
     portfolio = {"portfolio_name": portfolio_name, "stocks": stocks, "bonds": bonds, "cash": cash}
 
     try:
-        portfolios_col.update_one( {"username" : username , "portfolio_name" : portfolio_name }, 
+        portfolios_col.update_one( {"username" : username, "portfolio_name" : portfolio_name }, 
                 {"$set": portfolio}, upsert=True)
         results = {"success": 1}
     except:
