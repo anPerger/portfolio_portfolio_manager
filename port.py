@@ -67,7 +67,6 @@ def delete_portfolio():
     username = request.args.get("username")
     portfolio_name = request.args.get("portfolio-name")
 
-
     try:
         portfolios_col.delete_one({"username": username, "portfolio_name": portfolio_name})
         results = {"success": 1}
