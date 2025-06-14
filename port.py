@@ -23,11 +23,13 @@ def create_portfolio():
     stocks = float(request.args.get("stocks"))
     bonds = float(request.args.get("bonds"))
     cash = float(request.args.get("cash"))
+
+    api_key = request.args.get("key")
     
     portfolio = {"portfolio_name": portfolio_name, "stocks": stocks, "bonds": bonds, "cash": cash}
 
     try:
-        portfolios_col.update_one( {"username" : username, "portfolio_name" : portfolio_name }, 
+        portfolios_col.update_one( {"username" : username, "APIkey": api_key, "portfolio_name" : portfolio_name }, 
                 {"$set": portfolio}, upsert=True)
         results = {"success": 1}
     except:
@@ -40,8 +42,9 @@ def create_portfolio():
 def return_portfolios():
 
     username = request.args.get("username")
+    api_key = request.args.get("key")
 
-    portfolios = list(portfolios_col.find({"username": username}))
+    portfolios = list(portfolios_col.find({"username": username, "APIkey": api_key}))
 
     for portfolio in portfolios:
         del portfolio["_id"]
@@ -53,8 +56,9 @@ def return_portfolio():
 
     username = request.args.get("username")
     portfolio_name = request.args.get("portfolio-name")
+    api_key = request.args.get("key")
 
-    portfolio = portfolios_col.find_one({"username": username, "portfolio_name": portfolio_name})
+    portfolio = portfolios_col.find_one({"username": username, "APIkey": api_key, "portfolio_name": portfolio_name})
 
     del portfolio["_id"]
 
@@ -66,9 +70,10 @@ def delete_portfolio():
 
     username = request.args.get("username")
     portfolio_name = request.args.get("portfolio-name")
+    api_key = request.args.get("key")
 
     try:
-        portfolios_col.delete_one({"username": username, "portfolio_name": portfolio_name})
+        portfolios_col.delete_one({"username": username,  "APIkey": api_key, "portfolio_name": portfolio_name})
         results = {"success": 1}
     except:
         error_msg = "something has gone wrong"
